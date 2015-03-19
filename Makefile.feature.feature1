@@ -33,3 +33,18 @@ FEATURE_TRN12 := $(DIR_FEATURE)/$(FEATURE_NAME).trn12.sps
 FEATURE_TST12 := $(DIR_FEATURE)/$(FEATURE_NAME).tst12.sps
 FEATURE_TRN13 := $(DIR_FEATURE)/$(FEATURE_NAME).trn13.sps
 FEATURE_TST13 := $(DIR_FEATURE)/$(FEATURE_NAME).tst13.sps
+
+FEATURES := $(FEATURE_TRN00) $(FEATURE_TRN01) $(FEATURE_TRN02) $(FEATURE_TRN03)\
+            $(FEATURE_TRN04) $(FEATURE_TRN05) $(FEATURE_TRN06) $(FEATURE_TRN07)\
+            $(FEATURE_TRN08) $(FEATURE_TRN09) $(FEATURE_TRN10) $(FEATURE_TRN11)\
+            $(FEATURE_TRN12) $(FEATURE_TRN13) $(FEATURE_TST00) $(FEATURE_TST01)\
+            $(FEATURE_TST02) $(FEATURE_TST03) $(FEATURE_TST04) $(FEATURE_TST05)\
+            $(FEATURE_TST06) $(FEATURE_TST07) $(FEATURE_TST08) $(FEATURE_TST09)\
+            $(FEATURE_TST10) $(FEATURE_TST11) $(FEATURE_TST12) $(FEATURE_TST13)
+
+$(FEATURES): $(DATA_TRN) $(DATA_TST) $(LABEL_TRN) | $(DIR_FEATURE)
+	./src/generate_feature1.py --train-file $< \
+                               --label-file $(lastword $^) \
+                               --test-file $(word 2, $^) \
+                               --feature-dir $(DIR_FEATURE) \
+                               --feature-name $(FEATURE_NAME)

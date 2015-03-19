@@ -17,7 +17,7 @@ logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
 
 
 def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
-                  C, n_fold=10):
+                  C, n_fold=5):
     logging.info('Loading training and test data...')
     X, y = load_svmlight_file(train_file)
     X_tst, _ = load_svmlight_file(test_file)

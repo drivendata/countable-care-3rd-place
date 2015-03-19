@@ -1,7 +1,8 @@
 include Makefile.feature.feature1
 
-C = 1
-ALGO_NAME := lr_$(C)
+N = 400
+DEPTH = 20
+ALGO_NAME := rf_$(N)_$(DEPTH)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 
 METRIC_VAL := $(DIR_METRIC)/$(MODEL_NAME).val.txt
@@ -48,115 +49,129 @@ retrain: clean_$(ALGO_NAME) submission
 
 $(PREDICT_TST00) $(PREDICT_VAL00): $(FEATURE_TRN00) $(FEATURE_TST00) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL00) \
                                   --predict-test-file $(PREDICT_TST00) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST01) $(PREDICT_VAL01): $(FEATURE_TRN01) $(FEATURE_TST01) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL01) \
                                   --predict-test-file $(PREDICT_TST01) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST02) $(PREDICT_VAL02): $(FEATURE_TRN02) $(FEATURE_TST02) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL02) \
                                   --predict-test-file $(PREDICT_TST02) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST03) $(PREDICT_VAL03): $(FEATURE_TRN03) $(FEATURE_TST03) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL03) \
                                   --predict-test-file $(PREDICT_TST03) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST04) $(PREDICT_VAL04): $(FEATURE_TRN04) $(FEATURE_TST04) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL04) \
                                   --predict-test-file $(PREDICT_TST04) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST05) $(PREDICT_VAL05): $(FEATURE_TRN05) $(FEATURE_TST05) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL05) \
                                   --predict-test-file $(PREDICT_TST05) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST06) $(PREDICT_VAL06): $(FEATURE_TRN06) $(FEATURE_TST06) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL06) \
                                   --predict-test-file $(PREDICT_TST06) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST07) $(PREDICT_VAL07): $(FEATURE_TRN07) $(FEATURE_TST07) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL07) \
                                   --predict-test-file $(PREDICT_TST07) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST08) $(PREDICT_VAL08): $(FEATURE_TRN08) $(FEATURE_TST08) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL08) \
                                   --predict-test-file $(PREDICT_TST08) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST09) $(PREDICT_VAL09): $(FEATURE_TRN09) $(FEATURE_TST09) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL09) \
                                   --predict-test-file $(PREDICT_TST09) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST10) $(PREDICT_VAL10): $(FEATURE_TRN10) $(FEATURE_TST10) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL10) \
                                   --predict-test-file $(PREDICT_TST10) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST11) $(PREDICT_VAL11): $(FEATURE_TRN11) $(FEATURE_TST11) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL11) \
                                   --predict-test-file $(PREDICT_TST11) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST12) $(PREDICT_VAL12): $(FEATURE_TRN12) $(FEATURE_TST12) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL12) \
                                   --predict-test-file $(PREDICT_TST12) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(PREDICT_TST13) $(PREDICT_VAL13): $(FEATURE_TRN13) $(FEATURE_TST13) \
                                    | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_lr.py --train-file $< \
+	./src/train_predict_rf.py --train-file $< \
                                   --test-file $(lastword $^) \
                                   --predict-valid-file $(PREDICT_VAL13) \
                                   --predict-test-file $(PREDICT_TST13) \
-                                  --C $(C)
+                                  --depth $(DEPTH) \
+                                  --n-est $(N)
 
 $(SUBMISSION_TST_GZ): $(SUBMISSION_TST)
 	gzip $<
