@@ -12,12 +12,14 @@ import numpy as np
 import time
 
 
-logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
-                    level=logging.DEBUG)
-
-
 def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
                   n_est, depth, n_fold=5):
+
+    logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
+                        level=logging.DEBUG, filename='rf_{}_{}.log'.format(
+                                                        n_est, depth
+                                                       ))
+
     logging.info('Loading training and test data...')
     X, y = load_svmlight_file(train_file)
     X_tst, _ = load_svmlight_file(test_file)
