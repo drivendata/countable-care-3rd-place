@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import division
-from sklearn.metrics import log_loss
+from sklearn.metrics import log_loss, roc_auc_score
 
 import argparse
 import numpy as np
@@ -20,7 +20,9 @@ if __name__ == '__main__':
     model_name = os.path.splitext(args.predict_file)[0]
 
     lloss = 0.
+    auc = 0.
     for i in range(p.shape[1]):
         lloss += log_loss(y[:, i], p[:, i])
+        auc += roc_auc_score(y[:, i], p[:, i])
 
-    print('{}\t{:.6f}'.format(model_name, lloss / p.shape[1]))
+    print('{}\t{:.6f}\t{:.6f}'.format(model_name, lloss / p.shape[1], auc / p.shape[1]))

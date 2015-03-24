@@ -61,6 +61,8 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
 
         logging.info('Epoch #{}'.format(i_iter + 1))
 
+    _, y_tst = load_svmlight_file(test_file)
+    p_tst = np.zeros_like(y_tst)
     for i, (x, _) in enumerate(clf.read_sparse(test_file)):
         p_tst[i] = clf.predict(x)
 
