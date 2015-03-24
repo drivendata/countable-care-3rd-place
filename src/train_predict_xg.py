@@ -22,10 +22,7 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
 
     logging.info('Loading training and test data...')
     X, y = load_svmlight_file(train_file)
-    X_tst, _ = load_svmlight_file(test_file)
-
     X = X.todense()
-    dtest = xgb.DMatrix(test_file)
 
     param = {'objective': 'binary:logistic',
              'eval_metric': 'logloss',
@@ -52,8 +49,16 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
     logging.info('Log Loss = {:.4f}'.format(lloss / n_fold))
 
     logging.info('Retraining with 100% data...')
-    evallist = [(dtest, 'eval'), (dtrain, 'train')]
-    clf = xgb.train(param, xgb.DMatrix(X.copy(), label=y.copy()), n_est, evallist)
+
+    X_tst, _ = load_svmlight_file(test_file)
+    X_tst = X_tst.todense()
+
+    dtrain = xgb.DMatrix(X.copy(), label=y.copy())
+    dtest = xgb.DMatrix(X_tst.copy())
+
+    evallist = [(dtrain, 'train')]
+
+    clf = xgb.train(param, dtrain, n_est, evallist)
     p_tst = clf.predict(dtest)
 
     logging.info('Saving predictions...')
