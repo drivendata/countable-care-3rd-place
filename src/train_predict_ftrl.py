@@ -4,13 +4,13 @@ from __future__ import division
 from sklearn.cross_validation import cross_val_score, StratifiedKFold
 from sklearn.datasets import load_svmlight_file
 from sklearn.metrics import log_loss
-from sklearn.linear_model import LogisticRegression as LR
 
 import argparse
 import logging
 import numpy as np
 import time
-import xgboost as xgb
+
+from kaggler.online_model import FTRL
 
 
 logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
@@ -18,43 +18,52 @@ logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
 
 
 def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
-                  n_est=100, depth=4, lrate=.1, n_fold=5):
+                  n_iter=100, b=4, a=.1, n_fold=5):
 
-    logging.info('Loading training and test data...')
-    X, y = load_svmlight_file(train_file)
-    X_tst, _ = load_svmlight_file(test_file)
+    _, y_trn = load_svmlight_file(train_file)
 
-    X = X.todense()
-    dtest = xgb.DMatrix(test_file)
-
-    param = {'objective': 'binary:logistic',
-             'eval_metric': 'logloss',
-             'subsample': 0.5,
-             'silent': 1,
-             'max_depth': depth,
-             'eta': lrate}
-
-    cv = StratifiedKFold(y, n_folds=n_fold, shuffle=True, random_state=2015)
+    cv = StratifiedKFold(y_trn, n_folds=n_fold, shuffle=True, random_state=2015)
 
     logging.info('Cross validation...')
-    p_val = np.zeros_like(y)
+    p_val = np.zeros_like(y_trn)
     lloss = 0.
     for i_trn, i_val in cv:
-        dtrain = xgb.DMatrix(X[i_trn].copy(), label=y[i_trn].copy())
-        dvalid = xgb.DMatrix(X[i_val].copy(), label=y[i_val].copy())
+        clf = FTRL(a=a, b=b)
+        val = []
+        # train for cross validation
+        for i_iter in range(n_iter):
+            for i, (x, y) in enumerate(clf.read_sparse(train_file)):
+                if i in i_val:
+                    if i_iter == 0:
+                        val.append((i, x, y))
+                else:
+                    p = clf.predict(x)
+                    clf.update(x, p - y)
 
-        evallist = [(dvalid, 'eval'), (dtrain, 'train')]
+            # predict for cross validation
+            for i, x, y in val:
+                p_val[i] = clf.predict(x)
 
-        clf = xgb.train(param, dtrain, n_est, evallist)
-        p_val[i_val] = np.array(clf.predict(dvalid))
-        lloss += log_loss(y[i_val], p_val[i_val])
+            logging.info('Epoch #{}: Log Loss = {:.4f}'.format(i_iter + 1,
+                                                               log_loss(y_trn[i_val], p_val[i_val])))
+
+        lloss += log_loss(y_trn[i_val], p_val[i_val])
 
     logging.info('Log Loss = {:.4f}'.format(lloss / n_fold))
 
     logging.info('Retraining with 100% data...')
-    evallist = [(dtest, 'eval'), (dtrain, 'train')]
-    clf = xgb.train(param, xgb.DMatrix(X.copy(), label=y.copy()), n_est, evallist)
-    p_tst = clf.predict(dtest)
+    clf = FTRL(a=a, b=b)
+    for i_iter in range(n_iter):
+        for x, y in clf.read_sparse(train_file):
+            p = clf.predict(x)
+            clf.update(x, p - y)
+
+        logging.info('Epoch #{}'.format(i_iter + 1))
+
+    _, y_tst = load_svmlight_file(test_file)
+    p_tst = np.zeros_like(y_tst)
+    for i, (x, _) in enumerate(clf.read_sparse(test_file)):
+        p_tst[i] = clf.predict(x)
 
     logging.info('Saving predictions...')
     np.savetxt(predict_valid_file, p_val, fmt='%.6f')
@@ -69,9 +78,9 @@ if __name__ == '__main__':
                         dest='predict_valid_file')
     parser.add_argument('--predict-test-file', required=True,
                         dest='predict_test_file')
-    parser.add_argument('--n-est', type=int, dest='n_est')
-    parser.add_argument('--depth', type=int, dest='depth')
-    parser.add_argument('--lrate', type=float, dest='lrate')
+    parser.add_argument('--n-iter', type=int, dest='n_iter')
+    parser.add_argument('--b', type=float, dest='b')
+    parser.add_argument('--a', type=float, dest='a')
 
     args = parser.parse_args()
 
@@ -80,8 +89,8 @@ if __name__ == '__main__':
                   test_file=args.test_file,
                   predict_valid_file=args.predict_valid_file,
                   predict_test_file=args.predict_test_file,
-                  n_est=args.n_est,
-                  depth=args.depth,
-                  lrate=args.lrate)
+                  n_iter=args.n_iter,
+                  b=args.b,
+                  a=args.a)
     logging.info('finished ({:.2f} min elasped)'.format((time.time() - start) /
                                                         60))
