@@ -1,15 +1,15 @@
-include Makefile.feature.feature1
+include Makefile.feature.ensemble
 
-N = 100
+N = 700
 DEPTH = 4
-LRATE = 0.1
+LRATE = 0.01
 ALGO_NAME := xg_$(N)_$(DEPTH)_$(LRATE)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 
 METRIC_VAL := $(DIR_METRIC)/$(MODEL_NAME).val.txt
 
 PREDICT_VAL := $(DIR_VAL)/$(MODEL_NAME).val.csv
-PREDICT_TST := $(DIR_VAL)/$(MODEL_NAME).tst.csv
+PREDICT_TST := $(DIR_TST)/$(MODEL_NAME).tst.csv
 
 PREDICT_VAL00 := $(DIR_VAL)/$(MODEL_NAME).val00.csv
 PREDICT_TST00 := $(DIR_TST)/$(MODEL_NAME).tst00.csv
