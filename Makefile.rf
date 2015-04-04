@@ -1,7 +1,7 @@
-include Makefile.feature.ensemble
+include Makefile.feature.feature8
 
 N = 400
-DEPTH = 10
+DEPTH = 40
 ALGO_NAME := rf_$(N)_$(DEPTH)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 

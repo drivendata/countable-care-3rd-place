@@ -9,7 +9,7 @@ import numpy as np
 import os
 import pandas as pd
 
-from kaggler.util import encode_categorical_features
+from kaggler.util import encode_categorical_features, normalize_numerical_feature
 
 
 logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
@@ -30,22 +30,19 @@ def generate_feature(train_file, label_file, test_file, feature_dir,
     df = pd.concat([trn, tst], ignore_index=True)
 
     cols = list(df.columns)
-    num_cols = [x for x in cols if x[0] == 'n' or x[0] == 'o']
-    cat_cols = [x for x in cols if x[0] == 'c' or x[0] == 'r']
+    num_cols = [x for x in cols if x[0] == 'n']
+    cat_cols = [x for x in cols if x[0] == 'c' or x[0] == 'r' or x[0] == 'o']
 
+    # normalize numerical variables
     logging.info('Imputing missing values in numerical columns by 0')
-    X = df.ix[:, num_cols].values
-    X[np.isnan(X)] = 0.
+    for col in num_cols:
+        df[col] = df[col].fillna(0)
+        df[col] = normalize_numerical_feature(df[col], n=n_trn)
 
     # One-Hot-Encoding for categorical variables
     logging.info('One-hot-encoding categorical columns')
-    X_col = encode_categorical_features(df[cat_cols], min_obs=10, n=n_trn,
-                                        nan_as_var=False)
 
-    X = sparse.hstack((X, X_col))
-    logging.debug('{} features created'.format(X.shape[1]))
-
-    logging.info('Converting the feature matrix to CSR')
+    X = encode_categorical_features(df, min_obs=3, n=n_trn, nan_as_var=False)
     X = X.tocsr()
 
     logging.info('Saving features into {}'.format(feature_dir))

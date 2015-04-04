@@ -28,7 +28,7 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
     p_val = np.zeros_like(y_trn)
     lloss = 0.
     for i_trn, i_val in cv:
-        clf = NN(n=5200, h=hidden, a=lrate, seed=2015)
+        clf = NN(n=10000, h=hidden, a=lrate, seed=2015)
         val = []
         # train for cross validation
         for i_iter in range(n_iter):
@@ -52,7 +52,7 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
     logging.info('Log Loss = {:.4f}'.format(lloss / n_fold))
 
     logging.info('Retraining with 100% data...')
-    clf = NN(n=5200, h=hidden, a=lrate, seed=2015)
+    clf = NN(n=10000, h=hidden, a=lrate, seed=2015)
     for i_iter in range(n_iter):
         for x, y in clf.read_sparse(train_file):
             p = clf.predict(x)

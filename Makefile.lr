@@ -1,4 +1,4 @@
-include Makefile.feature.ensemble
+include Makefile.feature.feature8
 
 C = 0.1
 ALGO_NAME := lr_$(C)

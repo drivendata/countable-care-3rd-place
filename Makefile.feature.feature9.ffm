@@ -1,0 +1,111 @@
+#--------------------------------------------------------------------------
+# feature3: categorical feature cutoff = 10
+#--------------------------------------------------------------------------
+include Makefile
+
+FEATURE_NAME := feature5
+
+FEATURE_VALTRN00 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn00.ffm
+FEATURE_VALTST00 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst00.ffm
+FEATURE_VALTRN01 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn01.ffm
+FEATURE_VALTST01 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst01.ffm
+FEATURE_VALTRN02 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn02.ffm
+FEATURE_VALTST02 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst02.ffm
+FEATURE_VALTRN03 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn03.ffm
+FEATURE_VALTST03 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst03.ffm
+FEATURE_VALTRN04 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn04.ffm
+FEATURE_VALTST04 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst04.ffm
+FEATURE_VALTRN05 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn05.ffm
+FEATURE_VALTST05 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst05.ffm
+FEATURE_VALTRN06 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn06.ffm
+FEATURE_VALTST06 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst06.ffm
+FEATURE_VALTRN07 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn07.ffm
+FEATURE_VALTST07 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst07.ffm
+FEATURE_VALTRN08 := $(DIR_FEATURE)/$(FEATURE_NAME).valtrn08.ffm
+FEATURE_VALTST08 := $(DIR_FEATURE)/$(FEATURE_NAME).valtst08.ffm
+
+FEATURE_TRN00 := $(DIR_FEATURE)/$(FEATURE_NAME).trn00.ffm
+FEATURE_TST00 := $(DIR_FEATURE)/$(FEATURE_NAME).tst00.ffm
+FEATURE_TRN01 := $(DIR_FEATURE)/$(FEATURE_NAME).trn01.ffm
+FEATURE_TST01 := $(DIR_FEATURE)/$(FEATURE_NAME).tst01.ffm
+FEATURE_TRN02 := $(DIR_FEATURE)/$(FEATURE_NAME).trn02.ffm
+FEATURE_TST02 := $(DIR_FEATURE)/$(FEATURE_NAME).tst02.ffm
+FEATURE_TRN03 := $(DIR_FEATURE)/$(FEATURE_NAME).trn03.ffm
+FEATURE_TST03 := $(DIR_FEATURE)/$(FEATURE_NAME).tst03.ffm
+FEATURE_TRN04 := $(DIR_FEATURE)/$(FEATURE_NAME).trn04.ffm
+FEATURE_TST04 := $(DIR_FEATURE)/$(FEATURE_NAME).tst04.ffm
+FEATURE_TRN05 := $(DIR_FEATURE)/$(FEATURE_NAME).trn05.ffm
+FEATURE_TST05 := $(DIR_FEATURE)/$(FEATURE_NAME).tst05.ffm
+FEATURE_TRN06 := $(DIR_FEATURE)/$(FEATURE_NAME).trn06.ffm
+FEATURE_TST06 := $(DIR_FEATURE)/$(FEATURE_NAME).tst06.ffm
+FEATURE_TRN07 := $(DIR_FEATURE)/$(FEATURE_NAME).trn07.ffm
+FEATURE_TST07 := $(DIR_FEATURE)/$(FEATURE_NAME).tst07.ffm
+FEATURE_TRN08 := $(DIR_FEATURE)/$(FEATURE_NAME).trn08.ffm
+FEATURE_TST08 := $(DIR_FEATURE)/$(FEATURE_NAME).tst08.ffm
+
+FEATURES := $(FEATURE_TRN00) $(FEATURE_TRN01) $(FEATURE_TRN02) $(FEATURE_TRN03)\
+            $(FEATURE_TRN04) $(FEATURE_TRN05) $(FEATURE_TRN06) $(FEATURE_TRN07)\
+            $(FEATURE_TRN08) \
+            $(FEATURE_TST00) $(FEATURE_TST01)\
+            $(FEATURE_TST02) $(FEATURE_TST03) $(FEATURE_TST04) $(FEATURE_TST05)\
+            $(FEATURE_TST06) $(FEATURE_TST07) $(FEATURE_TST08)
+
+$(FEATURES): $(DATA_TRN) $(DATA_TST) $(LABEL_TRN) | $(DIR_FEATURE)
+	./src/generate_feature3_ffm.py --train-file $< \
+                               --test-file $(word 2, $^) \
+                               --feature-dir $(DIR_FEATURE) \
+                               --feature-name $(FEATURE_NAME)
+
+$(FEATURE_VALTRN00) $(FEATURE_VALTST00): $(FEATURE_TRN00)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN00) \
+                               --valid-file $(FEATURE_VALTST00) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN01) $(FEATURE_VALTST01): $(FEATURE_TRN01)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN01) \
+                               --valid-file $(FEATURE_VALTST01) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN02) $(FEATURE_VALTST02): $(FEATURE_TRN02)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN02) \
+                               --valid-file $(FEATURE_VALTST02) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN03) $(FEATURE_VALTST03): $(FEATURE_TRN03)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN03) \
+                               --valid-file $(FEATURE_VALTST03) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN04) $(FEATURE_VALTST04): $(FEATURE_TRN04)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN04) \
+                               --valid-file $(FEATURE_VALTST04) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN05) $(FEATURE_VALTST05): $(FEATURE_TRN05)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN05) \
+                               --valid-file $(FEATURE_VALTST05) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN06) $(FEATURE_VALTST06): $(FEATURE_TRN06)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN06) \
+                               --valid-file $(FEATURE_VALTST06) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN07) $(FEATURE_VALTST07): $(FEATURE_TRN07)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN07) \
+                               --valid-file $(FEATURE_VALTST07) \
+                               --valid-id $(IS_VAL)
+
+$(FEATURE_VALTRN08) $(FEATURE_VALTST08): $(FEATURE_TRN08)
+	./src/split_train_valid.py --feature-file $< \
+                               --train-file $(FEATURE_VALTRN08) \
+                               --valid-file $(FEATURE_VALTST08) \
+                               --valid-id $(IS_VAL)
