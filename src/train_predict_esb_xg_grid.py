@@ -39,8 +39,6 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file):
     logging.info('best model = {}'.format(clf.best_estimator_))
     logging.info('best score = {:.4f}'.format(clf.best_score_))
 
-    clf.best_estimator_.fit(X, y)
-
     logging.info('Retraining with 100% data...')
     clf.best_estimator_.fit(X, y)
     p_tst = clf.best_estimator_.predict_proba(X_tst)[:, 1]
