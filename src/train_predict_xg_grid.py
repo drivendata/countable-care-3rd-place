@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import division
-from sklearn.cross_validation import cross_val_score, StratifiedKFold
+from sklearn.cross_validation import StratifiedKFold
 from sklearn.datasets import load_svmlight_file
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import log_loss
@@ -28,9 +28,10 @@ def train_predict(train_file, test_file, valid_train_file, valid_test_file,
     X_valtst, y_valtst = load_svmlight_file(valid_test_file)
 
     xg = xgb.XGBClassifier()
-    param = {'n_estimators': [50, 100, 200], 'max_depth': [6, 8, 10],
+    param = {'n_estimators': [50, 100, 150], 'max_depth': [4, 6, 8],
              'learning_rate': [.01, .05, .1]}
-    clf = GridSearchCV(xg, param, scoring='log_loss', verbose=1)
+    cv = StratifiedKFold(y_valtrn, n_folds=3, shuffle=True, random_state=2015)
+    clf = GridSearchCV(xg, param, scoring='log_loss', verbose=1, cv=cv)
 
     logging.info('Cross validation for grid search...')
     clf.fit(X_valtrn, y_valtrn)
@@ -38,7 +39,7 @@ def train_predict(train_file, test_file, valid_train_file, valid_test_file,
     logging.info('best model = {}'.format(clf.best_estimator_))
     logging.info('best score = {:.4f}'.format(clf.best_score_))
 
-    clf.best_estimator_.fit(X, y)
+    clf.best_estimator_.fit(X_valtrn, y_valtrn)
     p_valtst = clf.best_estimator_.predict_proba(X_valtst)[:, 1]
     lloss = log_loss(y_valtst, p_valtst)
 
