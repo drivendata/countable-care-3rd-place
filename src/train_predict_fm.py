@@ -18,39 +18,38 @@ logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
                     level=logging.DEBUG)
 
 
-def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
-                  n_iter=100, dim=4, lrate=.1, n_fold=5):
+def logloss(y, p):
+    p = max(1e-15, min(1 - 1e-15, p))
+    return -np.log(p) if y == 1 else -np.log(1 - p)
 
-    _, y_trn = load_svmlight_file(train_file)
 
-    cv = StratifiedKFold(y_trn, n_folds=n_fold, shuffle=True, random_state=2015)
+def train_predict(train_file, test_file, valid_train_file, valid_test_file,
+                  predict_valid_file, predict_test_file,
+                  n_iter=100, dim=4, lrate=.1):
 
-    logging.info('Cross validation...')
-    p_val = np.zeros_like(y_trn)
-    lloss = 0.
-    for i_trn, i_val in cv:
-        clf = FM(5e5, dim=dim, a=lrate)
-        val = []
-        # train for cross validation
-        for i_iter in range(n_iter):
-            for i, (x, y) in enumerate(clf.read_sparse(train_file)):
-                if i in i_val:
-                    if i_iter == 0:
-                        val.append((i, x, y))
-                else:
-                    p = clf.predict(x)
-                    clf.update(x, p - y)
+    _, y_valtst = load_svmlight_file(valid_test_file)
 
-            # predict for cross validation
-            for i, x, y in val:
-                p_val[i] = clf.predict(x)
+    clf = FM(5e5, dim=dim, a=lrate)
+    logging.info('Epoch\tTrain\tValid')
+    logging.info('=========================')
+    for i_iter in range(n_iter):
+        lloss_trn = 0.
+        for i, (x, y) in enumerate(clf.read_sparse(valid_train_file)):
+            p = clf.predict(x)
+            clf.update(x, p - y)
+            lloss_trn += logloss(y, p)
 
-            logging.info('Epoch #{}: Log Loss = {:.4f}'.format(i_iter + 1,
-                                                               log_loss(y_trn[i_val], p_val[i_val])))
+        lloss_trn /= (i + 1)
 
-        lloss += log_loss(y_trn[i_val], p_val[i_val])
+        # predict for cross validation
+        p_valtst = np.zeros_like(y_valtst)
+        for i, (x, y) in enumerate(clf.read_sparse(valid_test_file)):
+            p_valtst[i] = clf.predict(x)
 
-    logging.info('Log Loss = {:.4f}'.format(lloss / n_fold))
+        lloss_val = log_loss(y_valtst, p_valtst)
+        logging.info('#{:4d}\t{:.4f}\t{:.4f}'.format(i_iter + 1,
+                                                     lloss_trn,
+                                                     lloss_val))
 
     logging.info('Retraining with 100% data...')
     clf = FM(5e5, dim=dim, a=lrate)
@@ -67,7 +66,7 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
         p_tst[i] = clf.predict(x)
 
     logging.info('Saving predictions...')
-    np.savetxt(predict_valid_file, p_val, fmt='%.6f')
+    np.savetxt(predict_valid_file, p_valtst, fmt='%.6f')
     np.savetxt(predict_test_file, p_tst, fmt='%.6f')
 
 
@@ -75,6 +74,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train-file', required=True, dest='train_file')
     parser.add_argument('--test-file', required=True, dest='test_file')
+    parser.add_argument('--valid-train-file', required=True, dest='valid_train_file')
+    parser.add_argument('--valid-test-file', required=True, dest='valid_test_file')
     parser.add_argument('--predict-valid-file', required=True,
                         dest='predict_valid_file')
     parser.add_argument('--predict-test-file', required=True,
@@ -88,6 +89,8 @@ if __name__ == '__main__':
     start = time.time()
     train_predict(train_file=args.train_file,
                   test_file=args.test_file,
+                  valid_train_file=args.valid_train_file,
+                  valid_test_file=args.valid_test_file,
                   predict_valid_file=args.predict_valid_file,
                   predict_test_file=args.predict_test_file,
                   n_iter=args.n_iter,

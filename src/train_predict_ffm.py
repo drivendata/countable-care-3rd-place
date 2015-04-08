@@ -30,6 +30,7 @@ def train_predict(train_file, test_file, model_file, valid_train_file,
                      '-r', str(lrate),
                      '-t', str(n_iter),
                      '-p', valid_test_file,
+                     '-l', str(0.000001),
                      valid_train_file,
                      valid_model_file])
 
@@ -43,6 +44,7 @@ def train_predict(train_file, test_file, model_file, valid_train_file,
                      '-k', str(dim),
                      '-r', str(lrate),
                      '-t', str(n_iter),
+                     '-l', str(0.000001),
                      train_file,
                      model_file])
 

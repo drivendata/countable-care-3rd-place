@@ -17,12 +17,13 @@ if __name__ == '__main__':
     p = np.loadtxt(args.predict_file, delimiter=',')
     y = np.loadtxt(args.target_file, delimiter=',')
 
-    model_name = os.path.splitext(args.predict_file)[0]
+    model_name = os.path.basename(args.predict_file)[:-8]
 
+    n_class = p.shape[1]
     lloss = 0.
     auc = 0.
-    for i in range(p.shape[1]):
+    for i in range(n_class):
         lloss += log_loss(y[:, i], p[:, i])
         auc += roc_auc_score(y[:, i], p[:, i])
 
-    print('{}\t{:.6f}\t{:.6f}'.format(model_name, lloss / p.shape[1], auc / p.shape[1]))
+    print('{}\t{:.4f}\t{:.4f}'.format(model_name, lloss / n_class, auc / n_class))

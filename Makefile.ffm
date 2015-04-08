@@ -1,8 +1,8 @@
-include Makefile.feature.feature3.ffm
+include Makefile.feature.feature9.ffm
 
 N = 100
-DIM = 12
-LRATE = 0.005
+DIM = 2
+LRATE = 0.1
 ALGO_NAME := libffm_$(N)_$(DIM)_$(LRATE)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 
@@ -29,6 +29,16 @@ PREDICT_VAL07 := $(DIR_VAL)/$(MODEL_NAME).val07.csv
 PREDICT_TST07 := $(DIR_TST)/$(MODEL_NAME).tst07.csv
 PREDICT_VAL08 := $(DIR_VAL)/$(MODEL_NAME).val08.csv
 PREDICT_TST08 := $(DIR_TST)/$(MODEL_NAME).tst08.csv
+PREDICT_VAL09 := $(DIR_VAL)/$(MODEL_NAME).val09.csv
+PREDICT_TST09 := $(DIR_TST)/$(MODEL_NAME).tst09.csv
+PREDICT_VAL10 := $(DIR_VAL)/$(MODEL_NAME).val10.csv
+PREDICT_TST10 := $(DIR_TST)/$(MODEL_NAME).tst10.csv
+PREDICT_VAL11 := $(DIR_VAL)/$(MODEL_NAME).val11.csv
+PREDICT_TST11 := $(DIR_TST)/$(MODEL_NAME).tst11.csv
+PREDICT_VAL12 := $(DIR_VAL)/$(MODEL_NAME).val12.csv
+PREDICT_TST12 := $(DIR_TST)/$(MODEL_NAME).tst12.csv
+PREDICT_VAL13 := $(DIR_VAL)/$(MODEL_NAME).val13.csv
+PREDICT_TST13 := $(DIR_TST)/$(MODEL_NAME).tst13.csv
 
 MODEL_VAL00 := $(DIR_MODEL)/$(MODEL_NAME).val00.csv
 MODEL_TST00 := $(DIR_MODEL)/$(MODEL_NAME).tst00.csv
@@ -48,6 +58,17 @@ MODEL_VAL07 := $(DIR_MODEL)/$(MODEL_NAME).val07.csv
 MODEL_TST07 := $(DIR_MODEL)/$(MODEL_NAME).tst07.csv
 MODEL_VAL08 := $(DIR_MODEL)/$(MODEL_NAME).val08.csv
 MODEL_TST08 := $(DIR_MODEL)/$(MODEL_NAME).tst08.csv
+MODEL_VAL09 := $(DIR_MODEL)/$(MODEL_NAME).val09.csv
+MODEL_TST09 := $(DIR_MODEL)/$(MODEL_NAME).tst09.csv
+MODEL_VAL10 := $(DIR_MODEL)/$(MODEL_NAME).val10.csv
+MODEL_TST10 := $(DIR_MODEL)/$(MODEL_NAME).tst10.csv
+MODEL_VAL11 := $(DIR_MODEL)/$(MODEL_NAME).val11.csv
+MODEL_TST11 := $(DIR_MODEL)/$(MODEL_NAME).tst11.csv
+MODEL_VAL12 := $(DIR_MODEL)/$(MODEL_NAME).val12.csv
+MODEL_TST12 := $(DIR_MODEL)/$(MODEL_NAME).tst12.csv
+MODEL_VAL13 := $(DIR_MODEL)/$(MODEL_NAME).val13.csv
+MODEL_TST13 := $(DIR_MODEL)/$(MODEL_NAME).tst13.csv
+
 
 SUBMISSION_TST := $(DIR_TST)/$(MODEL_NAME).sub.csv
 SUBMISSION_TST_GZ := $(DIR_TST)/$(MODEL_NAME).sub.csv.gz
@@ -192,6 +213,81 @@ $(PREDICT_TST08) $(PREDICT_VAL08): $(FEATURE_TRN08) $(FEATURE_TST08) \
                                   --lrate $(LRATE) \
                                   --n-iter $(N)
 
+$(PREDICT_TST09) $(PREDICT_VAL09): $(FEATURE_TRN09) $(FEATURE_TST09) \
+                                   $(FEATURE_VALTRN09) $(FEATURE_VALTST09) \
+                                   | $(DIR_VAL) $(DIR_TST)
+	./src/train_predict_ffm.py --train-file $< \
+                                  --test-file $(word 2, $^) \
+                                  --valid-train-file $(word 3, $^) \
+                                  --valid-test-file $(lastword $^) \
+                                  --valid-model-file $(MODEL_VAL09) \
+                                  --model-file $(MODEL_TST09) \
+                                  --predict-valid-file $(PREDICT_VAL09) \
+                                  --predict-test-file $(PREDICT_TST09) \
+                                  --dim $(DIM) \
+                                  --lrate $(LRATE) \
+                                  --n-iter $(N)
+
+$(PREDICT_TST10) $(PREDICT_VAL10): $(FEATURE_TRN10) $(FEATURE_TST10) \
+                                   $(FEATURE_VALTRN10) $(FEATURE_VALTST10) \
+                                   | $(DIR_VAL) $(DIR_TST)
+	./src/train_predict_ffm.py --train-file $< \
+                                  --test-file $(word 2, $^) \
+                                  --valid-train-file $(word 3, $^) \
+                                  --valid-test-file $(lastword $^) \
+                                  --valid-model-file $(MODEL_VAL10) \
+                                  --model-file $(MODEL_TST10) \
+                                  --predict-valid-file $(PREDICT_VAL10) \
+                                  --predict-test-file $(PREDICT_TST10) \
+                                  --dim $(DIM) \
+                                  --lrate $(LRATE) \
+                                  --n-iter $(N)
+
+$(PREDICT_TST11) $(PREDICT_VAL11): $(FEATURE_TRN11) $(FEATURE_TST11) \
+                                   $(FEATURE_VALTRN11) $(FEATURE_VALTST11) \
+                                   | $(DIR_VAL) $(DIR_TST)
+	./src/train_predict_ffm.py --train-file $< \
+                                  --test-file $(word 2, $^) \
+                                  --valid-train-file $(word 3, $^) \
+                                  --valid-test-file $(lastword $^) \
+                                  --valid-model-file $(MODEL_VAL11) \
+                                  --model-file $(MODEL_TST11) \
+                                  --predict-valid-file $(PREDICT_VAL11) \
+                                  --predict-test-file $(PREDICT_TST11) \
+                                  --dim $(DIM) \
+                                  --lrate $(LRATE) \
+                                  --n-iter $(N)
+
+$(PREDICT_TST12) $(PREDICT_VAL12): $(FEATURE_TRN12) $(FEATURE_TST12) \
+                                   $(FEATURE_VALTRN12) $(FEATURE_VALTST12) \
+                                   | $(DIR_VAL) $(DIR_TST)
+	./src/train_predict_ffm.py --train-file $< \
+                                  --test-file $(word 2, $^) \
+                                  --valid-train-file $(word 3, $^) \
+                                  --valid-test-file $(lastword $^) \
+                                  --valid-model-file $(MODEL_VAL12) \
+                                  --model-file $(MODEL_TST12) \
+                                  --predict-valid-file $(PREDICT_VAL12) \
+                                  --predict-test-file $(PREDICT_TST12) \
+                                  --dim $(DIM) \
+                                  --lrate $(LRATE) \
+                                  --n-iter $(N)
+
+$(PREDICT_TST13) $(PREDICT_VAL13): $(FEATURE_TRN13) $(FEATURE_TST13) \
+                                   $(FEATURE_VALTRN13) $(FEATURE_VALTST13) \
+                                   | $(DIR_VAL) $(DIR_TST)
+	./src/train_predict_ffm.py --train-file $< \
+                                  --test-file $(word 2, $^) \
+                                  --valid-train-file $(word 3, $^) \
+                                  --valid-test-file $(lastword $^) \
+                                  --valid-model-file $(MODEL_VAL13) \
+                                  --model-file $(MODEL_TST13) \
+                                  --predict-valid-file $(PREDICT_VAL13) \
+                                  --predict-test-file $(PREDICT_TST13) \
+                                  --dim $(DIM) \
+                                  --lrate $(LRATE) \
+                                  --n-iter $(N)
+
 $(SUBMISSION_TST_GZ): $(SUBMISSION_TST)
 	gzip $<
 
@@ -202,15 +298,19 @@ $(SUBMISSION_TST): $(PREDICT_TST) $(HEADER) $(ID_TST) | $(DIR_TST)
 
 $(PREDICT_VAL): $(PREDICT_VAL00) $(PREDICT_VAL01) $(PREDICT_VAL02) \
                 $(PREDICT_VAL03) $(PREDICT_VAL04) $(PREDICT_VAL05) \
-                $(PREDICT_VAL06) $(PREDICT_VAL07) $(PREDICT_VAL08)
+                $(PREDICT_VAL06) $(PREDICT_VAL07) $(PREDICT_VAL08) \
+                $(PREDICT_VAL09) $(PREDICT_VAL10) $(PREDICT_VAL11) \
+                $(PREDICT_VAL12) $(PREDICT_VAL13)
 	paste -d, $^ > $@
 
 $(PREDICT_TST): $(PREDICT_TST00) $(PREDICT_TST01) $(PREDICT_TST02) \
                 $(PREDICT_TST03) $(PREDICT_TST04) $(PREDICT_TST05) \
-                $(PREDICT_TST06) $(PREDICT_TST07) $(PREDICT_TST08)
+                $(PREDICT_TST06) $(PREDICT_TST07) $(PREDICT_TST08) \
+                $(PREDICT_TST09) $(PREDICT_TST10) $(PREDICT_TST11) \
+                $(PREDICT_TST12) $(PREDICT_TST13)
 	paste -d, $^ > $@
 
-$(METRIC_VAL): $(PREDICT_VAL) $(YS_TRN) | $(DIR_METRIC)
+$(METRIC_VAL): $(PREDICT_VAL) $(YS_VAL) | $(DIR_METRIC)
 	./src/evaluate.py -t $(lastword $^) -p $< > $@
 	cat $@
 
@@ -218,7 +318,7 @@ $(METRIC_VAL): $(PREDICT_VAL) $(YS_TRN) | $(DIR_METRIC)
 clean:: clean_$(ALGO_NAME)
 
 clean_$(ALGO_NAME):
-	-rm $(MODEL_VAL1) $(PREDICT_VAL1) $(PREDICT_TST) $(SUBMISSION_TST)
+	-rm $(MODEL_VAL1) $(PREDICT_VALS) $(PREDICT_TSTS) $(SUBMISSION_TST)
 	find . -name '*.pyc' -delete
 
 .DEFAULT_GOAL := all
