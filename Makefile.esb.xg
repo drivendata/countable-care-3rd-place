@@ -1,8 +1,8 @@
 include Makefile.feature.esb
 
-N = 50
+N = 250
 DEPTH = 4
-LRATE = 0.05
+LRATE = 0.01
 ALGO_NAME := esb_xg_$(N)_$(DEPTH)_$(LRATE)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 

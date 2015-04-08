@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import division
-from sklearn.cross_validation import cross_val_score, StratifiedKFold
+from sklearn.cross_validation import StratifiedKFold
 from sklearn.datasets import load_svmlight_file
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import log_loss
@@ -31,7 +31,8 @@ def train_predict(train_file, test_file, valid_train_file, valid_test_file,
 
     rf = RF(random_state=2015)
     param = {'n_estimators': [100, 200, 400], 'max_depth': [10, 20, 40]}
-    clf = GridSearchCV(rf, param, scoring='log_loss', verbose=1)
+    cv = StratifiedKFold(y, n_folds=3, shuffle=True, random_state=2015)
+    clf = GridSearchCV(rf, param, scoring='log_loss', verbose=1, cv=cv)
 
     logging.info('Cross validation for grid search...')
     clf.fit(X, y)

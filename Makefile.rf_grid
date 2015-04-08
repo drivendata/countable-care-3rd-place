@@ -1,4 +1,4 @@
-include Makefile.feature.feature2
+include Makefile.feature.feature10
 
 ALGO_NAME := rf_grid
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)

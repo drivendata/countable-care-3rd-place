@@ -14,8 +14,7 @@ import subprocess
 import time
 
 
-def train_predict(train_file, test_file, valid_train_file, valid_test_file,
-                  predict_valid_file, predict_test_file,
+def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
                   n_iter=100, dim=4, lrate=.1, n_fold=5):
 
     logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
@@ -24,21 +23,42 @@ def train_predict(train_file, test_file, valid_train_file, valid_test_file,
                                                       ))
 
     logging.info('Loading training data')
-    _, y = load_svmlight_file(valid_test_file)
+    X, y = load_svmlight_file(train_file)
 
-    subprocess.call(["libFM",
-                     "-task", "c",
-                     '-dim', '1,1,{}'.format(dim),
-                     '-init_stdev', str(lrate),
-                     '-iter', str(n_iter),
-                     '-train', valid_train_file,
-                     '-test', valid_test_file,
-                     '-out', predict_valid_file])
+    cv = StratifiedKFold(y, n_folds=n_fold, shuffle=True, random_state=2015)
 
-    p = np.loadtxt(predict_valid_file)
-    lloss = log_loss(y, p)
+    logging.info('Cross validation...')
+    p = np.zeros_like(y)
+    lloss = 0.
+    for i_trn, i_val in cv:
+        now = datetime.now().strftime('%Y%m%d-%H%M%S')
+        valid_train_file = '/tmp/libfm_train_{}.sps'.format(now)
+        valid_test_file = '/tmp/libfm_valid_{}.sps'.format(now)
+        valid_predict_file = '/tmp/libfm_predict_{}.sps'.format(now)
 
-    logging.info('Log Loss = {:.4f}'.format(lloss))
+        dump_svmlight_file(X[i_trn], y[i_trn], valid_train_file,
+                           zero_based=False)
+        dump_svmlight_file(X[i_val], y[i_val], valid_test_file,
+                           zero_based=False)
+
+        subprocess.call(["libFM",
+                         "-task", "c",
+                         '-dim', '1,1,{}'.format(dim),
+                         '-init_stdev', str(lrate),
+                         '-iter', str(n_iter),
+                         '-train', valid_train_file,
+                         '-test', valid_test_file,
+                         '-out', valid_predict_file])
+
+        p[i_val] = np.loadtxt(valid_predict_file)
+        lloss += log_loss(y[i_val], p[i_val])
+
+        os.remove(valid_train_file)
+        os.remove(valid_test_file)
+        os.remove(valid_predict_file)
+
+    logging.info('Log Loss = {:.4f}'.format(lloss / n_fold))
+    np.savetxt(predict_valid_file, p, fmt='%.6f')
 
     logging.info('Retraining with 100% data...')
     subprocess.call(["libFM",
@@ -55,8 +75,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train-file', required=True, dest='train_file')
     parser.add_argument('--test-file', required=True, dest='test_file')
-    parser.add_argument('--valid-train-file', required=True, dest='valid_train_file')
-    parser.add_argument('--valid-test-file', required=True, dest='valid_test_file')
     parser.add_argument('--predict-valid-file', required=True,
                         dest='predict_valid_file')
     parser.add_argument('--predict-test-file', required=True,
@@ -70,8 +88,6 @@ if __name__ == '__main__':
     start = time.time()
     train_predict(train_file=args.train_file,
                   test_file=args.test_file,
-                  valid_train_file=args.valid_train_file,
-                  valid_test_file=args.valid_test_file,
                   predict_valid_file=args.predict_valid_file,
                   predict_test_file=args.predict_test_file,
                   n_iter=args.n_iter,

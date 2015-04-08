@@ -1,8 +1,8 @@
 include Makefile
 
-FEATURE_NAME := esb12_v3
+FEATURE_NAME := esb12_v2
 
-BASE_MODELS := xg_grid_feature8 \
+BASE_MODELS := xg_100_8_0.05_feature8 \
                xg_100_8_0.05_feature1 \
                nn_20_8_0.01_feature3 \
                nn_20_8_0.01_feature2 \
@@ -11,7 +11,7 @@ BASE_MODELS := xg_grid_feature8 \
                fm_200_8_0.001_feature3 \
                fm_200_4_0.001_feature2 \
                rf_400_40_feature5 \
-               rf_grid_feature2 \
+               rf_400_40_feature2 \
                lr_grid_feature4 \
                lr_grid_feature2
 

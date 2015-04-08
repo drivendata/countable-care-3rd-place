@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import division
-from sklearn.cross_validation import cross_val_score, StratifiedKFold
+from sklearn.cross_validation import StratifiedKFold
 from sklearn.datasets import load_svmlight_file
 from sklearn.metrics import log_loss
 from sklearn.ensemble import RandomForestClassifier as RF
@@ -12,8 +12,8 @@ import numpy as np
 import time
 
 
-def train_predict(train_file, test_file, valid_train_file, valid_test_file,
-                  predict_valid_file, predict_test_file, n_est, depth):
+def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
+                  n_est, depth, n_fold=5):
 
     logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
                         level=logging.DEBUG, filename='rf_{}_{}.log'.format(
@@ -21,23 +21,24 @@ def train_predict(train_file, test_file, valid_train_file, valid_test_file,
                                                        ))
 
     logging.info('Loading training and test data...')
-    X, y = load_svmlight_file(valid_train_file)
-    X_val, y_val = load_svmlight_file(valid_test_file)
+    X, y = load_svmlight_file(train_file)
+    X_tst, _ = load_svmlight_file(test_file)
 
     clf = RF(n_estimators=n_est, max_depth=depth, random_state=2015)
 
-    logging.info('Validation...')
-    clf.fit(X.todense(), y)
+    cv = StratifiedKFold(y, n_folds=n_fold, shuffle=True, random_state=2015)
 
-    p_val = clf.predict_proba(X_val.todense())[:, 1]
-    lloss = log_loss(y_val, p_val)
+    logging.info('Cross validation...')
+    p_val = np.zeros_like(y)
+    lloss = 0.
+    for i_trn, i_val in cv:
+        clf.fit(X, y)
+        p_val[i_val] = clf.predict_proba(X[i_val])[:, 1]
+        lloss += log_loss(y[i_val], p_val[i_val])
 
     logging.info('Log Loss = {:.4f}'.format(lloss))
 
     logging.info('Retraining with 100% data...')
-    X, y = load_svmlight_file(train_file)
-    X_tst, _ = load_svmlight_file(test_file)
-
     clf.fit(X.todense(), y)
     p_tst = clf.predict_proba(X_tst.todense())[:, 1]
 
@@ -50,8 +51,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train-file', required=True, dest='train_file')
     parser.add_argument('--test-file', required=True, dest='test_file')
-    parser.add_argument('--valid-train-file', required=True, dest='valid_train_file')
-    parser.add_argument('--valid-test-file', required=True, dest='valid_test_file')
     parser.add_argument('--predict-valid-file', required=True,
                         dest='predict_valid_file')
     parser.add_argument('--predict-test-file', required=True,
@@ -64,8 +63,6 @@ if __name__ == '__main__':
     start = time.time()
     train_predict(train_file=args.train_file,
                   test_file=args.test_file,
-                  valid_train_file=args.valid_train_file,
-                  valid_test_file=args.valid_test_file,
                   predict_valid_file=args.predict_valid_file,
                   predict_test_file=args.predict_test_file,
                   n_est=args.n_est,
