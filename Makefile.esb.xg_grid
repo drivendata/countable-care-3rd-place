@@ -1,4 +1,4 @@
-include Makefile.feature.feature8
+include Makefile.feature.esb
 
 ALGO_NAME := esb_xg_grid
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)

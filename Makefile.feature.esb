@@ -1,6 +1,6 @@
 include Makefile
 
-FEATURE_NAME := esb12
+FEATURE_NAME := esb12_v2
 
 BASE_MODELS := xg_100_8_0.05_feature8 \
                xg_100_8_0.05_feature1 \
@@ -67,7 +67,7 @@ $(FEATURE_TRN): $(PREDICTS_TRN) | $(DIR_FEATURE)
 $(FEATURE_TST): $(PREDICTS_TST) | $(DIR_FEATURE)
 	paste -d, $^ > $@
 
-$(FEATURES): $(LABEL_TRN) $(FEATURE_TRN) $(FEATURE_TST)
+$(FEATURES): $(YS_VALTST) $(FEATURE_TRN) $(FEATURE_TST)
 	src/ensemble_features.py --label-file $< \
                              --valid-file $(word 2, $^) \
                              --test-file $(lastword $^) \

@@ -20,7 +20,7 @@ def ensemble_feature(valid_file, label_file, test_file, feature_dir,
     logging.info('Loading training and test data')
     val = np.loadtxt(valid_file, delimiter=',')
     tst = np.loadtxt(test_file, delimiter=',')
-    label = pd.read_csv(label_file, index_col=0)
+    label = np.loadtxt(label_file, delimiter=',')
 
     logging.info('{}x{}, {}x{}'.format(val.shape[0], val.shape[1],
                                        tst.shape[0], tst.shape[1]))
@@ -33,7 +33,7 @@ def ensemble_feature(valid_file, label_file, test_file, feature_dir,
         train_feature_file = os.path.join(feature_dir, '{}.trn{:02d}.sps'.format(feature_name, i))
         test_feature_file = os.path.join(feature_dir, '{}.tst{:02d}.sps'.format(feature_name, i))
 
-        dump_svmlight_file(val, label.ix[:, i], train_feature_file,
+        dump_svmlight_file(val, label[:, i], train_feature_file,
                            zero_based=False)
         dump_svmlight_file(tst, np.zeros((n_tst,)), test_feature_file,
                            zero_based=False)
