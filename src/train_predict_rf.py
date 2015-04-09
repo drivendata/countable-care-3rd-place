@@ -32,7 +32,7 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
     p_val = np.zeros_like(y)
     lloss = 0.
     for i_trn, i_val in cv:
-        clf.fit(X, y)
+        clf.fit(X[i_trn], y[i_trn])
         p_val[i_val] = clf.predict_proba(X[i_val])[:, 1]
         lloss += log_loss(y[i_val], p_val[i_val])
 

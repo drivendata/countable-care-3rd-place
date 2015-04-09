@@ -1,4 +1,4 @@
-include Makefile.feature.feature4
+include Makefile.feature.feature2
 
 N = 200
 DIM = 4

@@ -1,4 +1,4 @@
-include Makefile.feature.feature2
+include Makefile.feature.feature3
 
 N = 20
 HIDDEN = 8
