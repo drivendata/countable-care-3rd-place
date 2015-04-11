@@ -15,7 +15,8 @@ import time
 import xgboost as xgb
 
 
-def train_predict(train_file, test_file, predict_valid_file, predict_test_file):
+def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
+                  n_fold=5):
 
     feature_name = os.path.basename(train_file)[:-10]
     logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
@@ -26,10 +27,9 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file):
     X, y = load_svmlight_file(train_file)
     X_tst, _ = load_svmlight_file(test_file)
 
-    xg = xgb.XGBClassifier()
-    param = {'n_estimators': [50, 100, 150], 'max_depth': [4, 6, 8],
-             'learning_rate': [.01, .05, .1]}
-    cv = StratifiedKFold(y, n_folds=3, shuffle=True, random_state=2015)
+    xg = xgb.XGBClassifier(n_estimators=400, max_depth=4)
+    param = {'learning_rate': [.01, .03, .1]}
+    cv = StratifiedKFold(y, n_folds=n_fold, shuffle=True, random_state=2015)
     clf = GridSearchCV(xg, param, scoring='log_loss', verbose=1, cv=cv)
 
     logging.info('Cross validation for grid search...')
