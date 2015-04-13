@@ -4,28 +4,41 @@ from __future__ import division
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.datasets import load_svmlight_file
 from sklearn.metrics import log_loss
+from sklearn.ensemble import BaggingClassifier as BG
+from sklearn.ensemble import GradientBoostingClassifier as GBM
 
 import argparse
 import logging
 import numpy as np
+import os
 import time
-
-import xgboost as xgb
-
-
-logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
-                    level=logging.DEBUG)
 
 
 def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
                   n_est=100, depth=4, lrate=.1, n_fold=5):
 
+    feature = os.path.basename(train_file)[:-8]
+    logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
+                        level=logging.DEBUG,
+                        filename='esb_gbm_bagging_{}_{}_{}_{}'.format(n_est,
+                                                                      depth,
+                                                                      lrate,
+                                                                      feature))
+
     logging.info('Loading training and test data...')
     X, y = load_svmlight_file(train_file)
     X_tst, _ = load_svmlight_file(test_file)
 
-    clf = xgb.XGBClassifier(max_depth=depth, learning_rate=lrate,
-                            n_estimators=n_est)
+    X = X.todense()
+    X_tst = X_tst.todense()
+
+    logging.info('Validation...')
+    gbm = GBM(max_depth=depth, learning_rate=lrate, n_estimators=n_est,
+              random_state=2015)
+
+    clf = BG(base_estimator=gbm, n_estimators=5, max_samples=0.8,
+             max_features=0.8, bootstrap=True, bootstrap_features=True,
+             random_state=42, verbose=0)
 
     cv = StratifiedKFold(y, n_folds=n_fold, shuffle=True, random_state=2015)
 
@@ -37,7 +50,7 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
         p_val[i_val] = clf.predict_proba(X[i_val])[:, 1]
         lloss += log_loss(y[i_val], p_val[i_val])
 
-    logging.info('Log Loss = {:.4f}'.format(lloss / n_fold))
+    logging.info('Log Loss = {:.4f}'.format(lloss))
 
     logging.info('Retraining with 100% data...')
     clf.fit(X, y)

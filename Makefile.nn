@@ -1,8 +1,8 @@
-include Makefile.feature.feature3
+include Makefile.feature.feature8
 
 N = 20
-HIDDEN = 8
-LRATE = 0.01
+HIDDEN = 64
+LRATE = 0.005
 ALGO_NAME := nn_$(N)_$(HIDDEN)_$(LRATE)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 

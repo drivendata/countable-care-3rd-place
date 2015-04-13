@@ -29,10 +29,10 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
 
     cv = StratifiedKFold(y_val, n_folds=n_fold, shuffle=True, random_state=2015)
 
-    logging.info('Cross validation...')
     p_val = np.zeros_like(y_val)
     lloss = 0.
-    for i_trn, i_val in cv:
+    for i_cv, (i_trn, i_val) in enumerate(cv, start=1):
+        logging.info('CV training #{}'.format(i_cv))
         clf = FM(5e5, dim=dim, a=lrate)
 
         logging.info('Epoch\tTrain\tValid')
@@ -52,9 +52,10 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
             lloss_trn /= cnt_trn
             lloss_val = log_loss(y_val[i_val], p_val[i_val])
 
-            logging.info('#{:4d}\t{:.4f}\t{:.4f}'.format(i_iter + 1,
-                                                         lloss_trn,
-                                                         lloss_val))
+            if (i_iter == 0) or ((i_iter + 1) % int(n_iter / 10) == 0) or (i_iter == n_iter - 1):
+                logging.info('#{:4d}\t{:.4f}\t{:.4f}'.format(i_iter + 1,
+                                                             lloss_trn,
+                                                             lloss_val))
 
         lloss += lloss_val
 

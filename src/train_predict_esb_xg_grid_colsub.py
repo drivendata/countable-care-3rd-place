@@ -12,7 +12,7 @@ import numpy as np
 import os
 import time
 
-import xgboost as xgb
+import xgboost_colsub as xgb
 
 
 def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
@@ -21,14 +21,15 @@ def train_predict(train_file, test_file, predict_valid_file, predict_test_file,
     feature_name = os.path.basename(train_file)[:-10]
     logging.basicConfig(format='%(asctime)s   %(levelname)s   %(message)s',
                         level=logging.DEBUG,
-                        filename='esb_xg_grid_{}.log'.format(feature_name))
+                        filename='esb_xg_grid_colsub_{}.log'.format(feature_name))
 
     logging.info('Loading training and test data...')
     X, y = load_svmlight_file(train_file)
     X_tst, _ = load_svmlight_file(test_file)
 
-    xg = xgb.XGBClassifier(n_estimators=400, max_depth=4)
-    param = {'learning_rate': [.01, .03, .1], 'max_depth': [4, 6, 8]}}
+    xg = xgb.XGBClassifier()
+    param = {'learning_rate': [.01, .03, .05], 'max_depth': [4, 5, 6],
+             'n_estimators': [400, 600]}
     cv = StratifiedKFold(y, n_folds=n_fold, shuffle=True, random_state=2015)
     clf = GridSearchCV(xg, param, scoring='log_loss', verbose=1, cv=cv)
 

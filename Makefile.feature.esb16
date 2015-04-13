@@ -1,9 +1,12 @@
 include Makefile
 
-FEATURE_NAME := esb12_v1
+FEATURE_NAME := esb16
 
 BASE_MODELS := xg_100_8_0.05_feature8 \
                xg_100_8_0.05_feature1 \
+               xg_100_8_0.05_feature10 \
+               gbm_bagging_40_7_0.1_feature10 \
+               nn_20_64_0.005_feature8 \
                nn_20_8_0.01_feature3 \
                nn_20_8_0.01_feature2 \
                libfm_200_4_0.005_feature4 \
@@ -12,6 +15,7 @@ BASE_MODELS := xg_100_8_0.05_feature8 \
                fm_200_4_0.001_feature2 \
                rf_400_40_feature5 \
                rf_400_40_feature2 \
+               rf_400_40_feature10 \
                lr_0.1_feature4 \
                lr_0.1_feature2
 

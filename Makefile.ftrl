@@ -1,8 +1,8 @@
-include Makefile.feature.feature3
+include Makefile.feature.feature8
 
 N = 10
 B = 1
-A = 0.1
+A = 0.001
 ALGO_NAME := ftrl_$(N)_$(B)_$(A)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 
@@ -51,7 +51,7 @@ retrain: clean_$(ALGO_NAME) submission
 $(PREDICT_TST00) $(PREDICT_VAL00): $(FEATURE_TRN00) $(FEATURE_TST00) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL00) \
                                   --predict-test-file $(PREDICT_TST00) \
                                   --b $(B) \
@@ -61,7 +61,7 @@ $(PREDICT_TST00) $(PREDICT_VAL00): $(FEATURE_TRN00) $(FEATURE_TST00) \
 $(PREDICT_TST01) $(PREDICT_VAL01): $(FEATURE_TRN01) $(FEATURE_TST01) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL01) \
                                   --predict-test-file $(PREDICT_TST01) \
                                   --b $(B) \
@@ -71,7 +71,7 @@ $(PREDICT_TST01) $(PREDICT_VAL01): $(FEATURE_TRN01) $(FEATURE_TST01) \
 $(PREDICT_TST02) $(PREDICT_VAL02): $(FEATURE_TRN02) $(FEATURE_TST02) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL02) \
                                   --predict-test-file $(PREDICT_TST02) \
                                   --b $(B) \
@@ -81,7 +81,7 @@ $(PREDICT_TST02) $(PREDICT_VAL02): $(FEATURE_TRN02) $(FEATURE_TST02) \
 $(PREDICT_TST03) $(PREDICT_VAL03): $(FEATURE_TRN03) $(FEATURE_TST03) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL03) \
                                   --predict-test-file $(PREDICT_TST03) \
                                   --b $(B) \
@@ -91,7 +91,7 @@ $(PREDICT_TST03) $(PREDICT_VAL03): $(FEATURE_TRN03) $(FEATURE_TST03) \
 $(PREDICT_TST04) $(PREDICT_VAL04): $(FEATURE_TRN04) $(FEATURE_TST04) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL04) \
                                   --predict-test-file $(PREDICT_TST04) \
                                   --b $(B) \
@@ -101,7 +101,7 @@ $(PREDICT_TST04) $(PREDICT_VAL04): $(FEATURE_TRN04) $(FEATURE_TST04) \
 $(PREDICT_TST05) $(PREDICT_VAL05): $(FEATURE_TRN05) $(FEATURE_TST05) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL05) \
                                   --predict-test-file $(PREDICT_TST05) \
                                   --b $(B) \
@@ -111,7 +111,7 @@ $(PREDICT_TST05) $(PREDICT_VAL05): $(FEATURE_TRN05) $(FEATURE_TST05) \
 $(PREDICT_TST06) $(PREDICT_VAL06): $(FEATURE_TRN06) $(FEATURE_TST06) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL06) \
                                   --predict-test-file $(PREDICT_TST06) \
                                   --b $(B) \
@@ -121,7 +121,7 @@ $(PREDICT_TST06) $(PREDICT_VAL06): $(FEATURE_TRN06) $(FEATURE_TST06) \
 $(PREDICT_TST07) $(PREDICT_VAL07): $(FEATURE_TRN07) $(FEATURE_TST07) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL07) \
                                   --predict-test-file $(PREDICT_TST07) \
                                   --b $(B) \
@@ -131,7 +131,7 @@ $(PREDICT_TST07) $(PREDICT_VAL07): $(FEATURE_TRN07) $(FEATURE_TST07) \
 $(PREDICT_TST08) $(PREDICT_VAL08): $(FEATURE_TRN08) $(FEATURE_TST08) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL08) \
                                   --predict-test-file $(PREDICT_TST08) \
                                   --b $(B) \
@@ -141,7 +141,7 @@ $(PREDICT_TST08) $(PREDICT_VAL08): $(FEATURE_TRN08) $(FEATURE_TST08) \
 $(PREDICT_TST09) $(PREDICT_VAL09): $(FEATURE_TRN09) $(FEATURE_TST09) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL09) \
                                   --predict-test-file $(PREDICT_TST09) \
                                   --b $(B) \
@@ -151,7 +151,7 @@ $(PREDICT_TST09) $(PREDICT_VAL09): $(FEATURE_TRN09) $(FEATURE_TST09) \
 $(PREDICT_TST10) $(PREDICT_VAL10): $(FEATURE_TRN10) $(FEATURE_TST10) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL10) \
                                   --predict-test-file $(PREDICT_TST10) \
                                   --b $(B) \
@@ -161,7 +161,7 @@ $(PREDICT_TST10) $(PREDICT_VAL10): $(FEATURE_TRN10) $(FEATURE_TST10) \
 $(PREDICT_TST11) $(PREDICT_VAL11): $(FEATURE_TRN11) $(FEATURE_TST11) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL11) \
                                   --predict-test-file $(PREDICT_TST11) \
                                   --b $(B) \
@@ -171,7 +171,7 @@ $(PREDICT_TST11) $(PREDICT_VAL11): $(FEATURE_TRN11) $(FEATURE_TST11) \
 $(PREDICT_TST12) $(PREDICT_VAL12): $(FEATURE_TRN12) $(FEATURE_TST12) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL12) \
                                   --predict-test-file $(PREDICT_TST12) \
                                   --b $(B) \
@@ -181,7 +181,7 @@ $(PREDICT_TST12) $(PREDICT_VAL12): $(FEATURE_TRN12) $(FEATURE_TST12) \
 $(PREDICT_TST13) $(PREDICT_VAL13): $(FEATURE_TRN13) $(FEATURE_TST13) \
                                    | $(DIR_VAL) $(DIR_TST)
 	./src/train_predict_ftrl.py --train-file $< \
-                                  --test-file $(lastword $^) \
+                                  --test-file $(word 2, $^) \
                                   --predict-valid-file $(PREDICT_VAL13) \
                                   --predict-test-file $(PREDICT_TST13) \
                                   --b $(B) \

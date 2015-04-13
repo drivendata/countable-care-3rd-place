@@ -1,24 +1,24 @@
-include Makefile.feature.ensemble
+include Makefile.feature.esb12
 
 C = 0.1
 ALGO_NAME := esb_lr_$(C)
-MODEL_NAME := $(ALGO_NAME)_$(ENSEMBLE_FEATURE_NAME)
+MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 
-METRIC_VAL1 := $(DIR_METRIC)/$(MODEL_NAME).val1.txt
+METRIC_VAL := $(DIR_METRIC)/$(MODEL_NAME).val1.txt
 
-PREDICT_VAL1 := $(DIR_VAL)/$(MODEL_NAME).val1.yht
+PREDICT_VAL := $(DIR_VAL)/$(MODEL_NAME).val1.yht
 PREDICT_TST := $(DIR_TST)/$(MODEL_NAME).tst.yht
 
 SUBMISSION_TST := $(DIR_TST)/$(MODEL_NAME).tst.csv
 
 all: validation submission
-validation: $(METRIC_VAL1)
+validation: $(METRIC_VAL)
 submission: $(SUBMISSION_TST)
 retrain: clean_$(ALGO_NAME) submission
 
-$(PREDICT_TST) $(PREDICT_VAL1): $(ENSEMBLE_FEATURE_VAL1) $(ENSEMBLE_FEATURE_TST)\
+$(PREDICT_TST) $(PREDICT_VAL): $(FEATURE_VAL) $(FEATURE_TST)\
                                | $(DIR_VAL) $(DIR_TST)
-	./src/train_predict_esb_lr.py -t $< -v $(lastword $^) -p $(PREDICT_VAL1)\
+	./src/train_predict_esb_lr.py -t $< -v $(lastword $^) -p $(PREDICT_VAL)\
                                   -q $(PREDICT_TST) -c $(C)
 
 $(SUBMISSION_TST_GZ): $(SUBMISSION_TST)
@@ -29,7 +29,7 @@ $(SUBMISSION_TST): $(PREDICT_TST) $(HEADER) $(ID_TST) | $(DIR_TST)
 	cat $(word 2, $^) $@.tmp > $@
 	rm $@.tmp
 
-$(METRIC_VAL1): $(PREDICT_VAL1) $(Y_VAL1) | $(DIR_METRIC)
+$(METRIC_VAL): $(PREDICT_VAL) $(YS_TRN) | $(DIR_METRIC)
 	./src/evaluate.py -t $(lastword $^) -p $< > $@
 	cat $@
 
@@ -37,7 +37,7 @@ $(METRIC_VAL1): $(PREDICT_VAL1) $(Y_VAL1) | $(DIR_METRIC)
 clean:: clean_$(ALGO_NAME)
 
 clean_$(ALGO_NAME):
-	-rm $(MODEL_VAL1) $(PREDICT_VAL1) $(PREDICT_TST) $(SUBMISSION_TST)
+	-rm $(MODEL_VAL) $(PREDICT_VAL) $(PREDICT_TST) $(SUBMISSION_TST)
 	find . -name '*.pyc' -delete
 
 .DEFAULT_GOAL := all
