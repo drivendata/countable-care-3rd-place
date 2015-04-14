@@ -20,6 +20,7 @@ class XGBoostClassifier(BaseEstimator, ClassifierMixin):
                        min_child_weight=1.0,
                        scale_pos_weight=1.0,
                        subsample=1.0,
+                       colsample=1.0,
                        n_jobs=1,
                        missing=-999.0,
                        random_state=None):
@@ -29,6 +30,7 @@ class XGBoostClassifier(BaseEstimator, ClassifierMixin):
         self.min_child_weight = min_child_weight
         self.scale_pos_weight = scale_pos_weight
         self.subsample = subsample
+        self.colsample = colsample
         self.n_jobs = n_jobs
         self.missing = missing
         self.random_state = random_state
@@ -43,6 +45,7 @@ class XGBoostClassifier(BaseEstimator, ClassifierMixin):
         params["bst:eta"] = self.eta
         params["bst:min_child_weight"] = self.min_child_weight
         params["bst:subsample"] = self.subsample
+        params["bst:colsample_bytree"] = self.colsample
         params["scale_pos_weight"] = self.scale_pos_weight
         params['silent'] = 1
         params['nthread'] = self.n_jobs

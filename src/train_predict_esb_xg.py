@@ -3,7 +3,6 @@
 from __future__ import division
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.datasets import load_svmlight_file
-from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import log_loss
 
 import argparse
@@ -12,7 +11,7 @@ import numpy as np
 import os
 import time
 
-import xgboost as xgb
+import xgbc as xgb
 
 
 def train_predict(train_file, test_file, predict_valid_file,
@@ -29,10 +28,15 @@ def train_predict(train_file, test_file, predict_valid_file,
     logging.info('Loading training and test data...')
     X, y = load_svmlight_file(train_file)
     X_tst, _ = load_svmlight_file(test_file)
+    X = X.todense()
+    X_tst = X_tst.todense()
 
     cv = StratifiedKFold(y, n_folds=n_fold, shuffle=True, random_state=2015)
-    clf = xgb.XGBClassifier(n_estimators=n_est, max_depth=depth,
-                            learning_rate=lrate)
+    clf = xgb.XGBoostClassifier(n_estimators=n_est,
+                                max_depth=depth,
+                                eta=lrate,
+                                subsample=0.5,
+                                colsample=0.8)
 
     logging.info('Cross validation...')
     p_val = np.zeros_like(y)
