@@ -1,6 +1,6 @@
-include Makefile.feature.esb16
+include Makefile.feature.esb17
 
-ALGO_NAME := esb_xg_grid_colsub_v2
+ALGO_NAME := esb_xg_grid_colsub
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 
 METRIC_VAL := $(DIR_METRIC)/$(MODEL_NAME).val.txt

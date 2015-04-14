@@ -1,8 +1,8 @@
-include Makefile.feature.feature10
+include Makefile.feature.feature8
 
-N = 40
-DEPTH = 7
-LRATE = 0.1
+N = 250
+DEPTH = 6
+LRATE = 0.05
 ALGO_NAME := xg_bagging_$(N)_$(DEPTH)_$(LRATE)
 MODEL_NAME := $(ALGO_NAME)_$(FEATURE_NAME)
 

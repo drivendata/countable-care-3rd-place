@@ -9,7 +9,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import check_random_state
 
 import sys
-sys.path.append("/Users/jeong/Development/tools//xgboost/wrapper/")
+#sys.path.append("/Users/jeong/Development/tools//xgboost/wrapper/")
 import xgboost as xgb
 import numpy as np
 

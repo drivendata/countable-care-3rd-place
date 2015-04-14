@@ -1,4 +1,4 @@
-include Makefile.feature.feature10
+include Makefile.feature.feature9
 
 N = 400
 DEPTH = 40

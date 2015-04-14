@@ -1,6 +1,6 @@
-include Makefile.feature.feature5
+include Makefile.feature.feature9
 
-N = 99
+N = 100
 DEPTH = 8
 LRATE = 0.05
 ALGO_NAME := xg_$(N)_$(DEPTH)_$(LRATE)
