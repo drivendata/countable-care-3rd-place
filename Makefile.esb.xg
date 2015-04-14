@@ -1,4 +1,4 @@
-include Makefile.feature.esb19
+include Makefile.feature.esb_xg_esb19
 
 N = 600
 DEPTH = 4
