@@ -1,7 +1,11 @@
 Countable Care
 ==============
+This is the 3rd prize winning solution by team JYL (Jeong-Yoon Lee and Abhishek Thakur) for the Countable Care competition at DrivenData.org.
 
-## Requirements
+The code assumes raw data is vailable under the `data` folder, and saves outputs in the `build` folder.
+
+# 1. Requirements
+
 ### Python Packages
 Install python packages listed in `requirements.txt` - `scipy`, `numpy`,
 `scikit-learn`, `statsmodels`, `pandas`, `Kaggler` packages
@@ -27,7 +31,7 @@ python setup.py build_ext --inplace
 (sudo) python setup.py install
 ```
 
-## Features
+# 2. Features
 8 features are used as follows:
 * `feature1` - impute 0 for missing values for numeric and ordinal features.
 * create dummy variables for values in categorical features appearing 10+ times
@@ -59,6 +63,8 @@ will be generated automatically before training:
 ```
 make -f Makefile.xg_100_8_0.05_feature1
 ```
+
+# 3. Individual Models
 
 ## Algorithm Implementations
 6 different algorithm implementations are used as follows:
@@ -109,6 +115,9 @@ make -f fm_200_8_0.001_feature2
 
 Predictions for training data with 5-CV and test data will be saved in
 `build/val` and `build/tst` folders respectively.
+
+
+# 4. Ensemble
 
 ## Ensemble Model
 Using predictions of 19 individual models (see [Individual Models](individual
