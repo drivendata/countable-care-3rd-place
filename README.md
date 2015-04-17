@@ -111,3 +111,36 @@ make -f Makefile.esb.xg_grid_colsub
 ```
 
 The prediction and submission files will be available in the `build/tst` folder.
+
+
+# 5. Performance
+
+## Ensemble Model Leaderboard
+| Model Name | Public Leaderboard | 5-fold CV |  Comment |
+|------------|-------------|-----------|-----------|---------|
+| esb_xg_grid_esb19_xgb120 | 0.2497 | - | 0.7 * esb_xg_grid_esb19 + 0.3 * sub_xgb120 |
+| esb_xg_grid_esb19 | 0.2503 | 0.2488 | |
+
+
+## Individual Model Leaderboard
+| Model Name | Leaderboard | 5-fold CV | Comment |
+|------------|-------------|-----------|-----------|---------|
+| xg_bagging_120_7_0.1_feature9 | - | 0.2564 | |
+| xg_100_8_0.05_feature9 | - | 0.2568 | |
+| xg_100_8_0.05_feature1 | - | 0.2575 | |
+| xg_100_8_0.05_feature8 | - | 0.2575 | |
+| xg_100_8_0.05_feature10 | - | 0.2618 | |
+| nn_20_8_0.01_feature3 | - | 0.2660 | |
+| nn_20_8_0.01_feature2 | - | 0.2669 | |
+| nn_20_64_0.005_feature8 | - | 0.2675 | |
+| gbm_bagging_40_7_0.1_feature10 | - | 0.2678 | |
+| libfm_200_4_0.005_feature4 | - | 0.2694 | |
+| fm_200_8_0.001_feature3 | - | 0.2717 | |
+| fm_200_4_0.001_feature2 | - | 0.2720 | |
+| libfm_200_4_0.005_feature2 | - | 0.2723 | |
+| rf_400_40_feature9 | - | 0.2755 | |
+| rf_400_40_feature2 | - | 0.2769 | |
+| rf_400_40_feature5 | - | 0.2776 | |
+| rf_400_40_feature10 | - | 0.2881 | |
+| lr_0.1_feature4 | - | 0.3699 | |
+| lr_0.1_feature2 | - | 0.3755 | |
